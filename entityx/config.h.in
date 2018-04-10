@@ -1,33 +1,11 @@
 #pragma once
 
-#cmakedefine ENTITYX_HAVE_BOOST_SHARED_PTR 1
-#cmakedefine ENTITYX_HAVE_STD_SHARED_PTR 1
-#cmakedefine ENTITYX_USE_STD_SHARED_PTR 1
-#cmakedefine ENTITYX_MAX_COMPONENTS @ENTITYX_MAX_COMPONENTS@
-
-// Which shared_ptr implementation should we use?
-#if (ENTITYX_HAVE_STD_SHARED_PTR && ENTITYX_USE_STD_SHARED_PTR)
-#include <memory>
-namespace entityx {
-using std::make_shared;
-using std::shared_ptr;
-using std::static_pointer_cast;
-using std::weak_ptr;
-using std::enable_shared_from_this;
-}
-#elif ENTITYX_HAVE_BOOST_SHARED_PTR
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <boost/make_shared.hpp>
-namespace entityx {
-using boost::shared_ptr;
-using boost::make_shared;
-using boost::static_pointer_cast;
-using boost::weak_ptr;
-using boost::enable_shared_from_this;
-}
-#endif
+#include <cstdint>
+#include <cstddef>
 
 namespace entityx {
-static const int MAX_COMPONENTS = ENTITYX_MAX_COMPONENTS;
-}
+
+static const size_t MAX_COMPONENTS = @ENTITYX_MAX_COMPONENTS@;
+typedef @ENTITYX_DT_TYPE@ TimeDelta;
+
+}  // namespace entityx

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2012 Alec Thomas <alec@swapoff.org>
  * All rights reserved.
  *
@@ -10,8 +10,8 @@
 
 #pragma once
 
+#include <unordered_set>
 #include <string>
-#include <boost/unordered_set.hpp>
 #include "entityx/Entity.h"
 
 namespace entityx {
@@ -19,19 +19,13 @@ namespace tags {
 
 /**
  * Allow entities to be tagged with strings.
+ *
+ * entity.assign<TagsComponent>("tag1", "tag2");
+ *
+ * ComponentPtr<TagsComponent> tags;
+ * for (Entity entity : entity_manager.entities_with_components(tags))
  */
 class TagsComponent : public Component<TagsComponent> {
-  struct TagsPredicate {
-    TagsPredicate(const std::string &tag) : tag(tag) {}
-
-    bool operator () (entityx::shared_ptr<EntityManager> manager, Entity::Id id) {
-      auto tags = manager->component<TagsComponent>(id);
-      return tags != nullptr && tags->tags.find(tag) != tags->tags.end();
-    }
-
-    std::string tag;
-  };
-
  public:
   /**
    * Construct a new TagsComponent with the given tags.
@@ -43,14 +37,7 @@ class TagsComponent : public Component<TagsComponent> {
     set_tags(tag, tags ...);
   }
 
-  /**
-   * Filter the provided view to only those entities with the given tag.
-   */
-  static EntityManager::View view(const EntityManager::View &view, const std::string &tag) {
-    return EntityManager::View(view, TagsPredicate(tag));
-  }
-
-  boost::unordered_set<std::string> tags;
+  std::unordered_set<std::string> tags;
 
  private:
   template <typename ... Args>
@@ -64,5 +51,5 @@ class TagsComponent : public Component<TagsComponent> {
   }
 };
 
-}
-}
+}  // namespace tags
+}  // namespace entityx
